@@ -2,11 +2,19 @@ import robin_stocks as rh
 import numpy as np
 import pandas as pd
 import time
+import pyotp
 
-user: str = ""
-password: str = ""
+u: str = ''
+p: str = ''
+t: str = ''
 
-login = rh.robinhood.login(user, password)
+with open('login.txt', "r") as inFile:
+    t = inFile.readline()
+    u = inFile.readline()
+    p = inFile.readline()
+    print(t)
+totp  = pyotp.TOTP(t).now()
+login = rh.robinhood.login(u, p, mfa_code=totp)
 
 currStocks = rh.robinhood.build_holdings()
 for key,val in currStocks.items(): # Prints all current holdings
