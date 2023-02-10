@@ -8,8 +8,10 @@ import pyotp
 
 # APCA_API_BASE_URL = "https://paper-api.alpaca.markets"
 
-apiKey = ""
-secretKey = ""
+with open("login.txt", "r") as inFile:
+    apiKey = inFile.readline().strip()
+    secretKey = inFile.readline().strip()
+
 trading_client = al.client.TradingClient(apiKey, secretKey, paper=True)
 account = trading_client.get_account()
 
@@ -25,6 +27,9 @@ print(f'Today\'s portfolio balance change: ${balance_change}')
 
 search_params = al.requests.GetAssetsRequest(asset_class=al.enums.AssetClass.US_EQUITY)
 assets = trading_client.get_all_assets(search_params)
+positions = trading_client.get_all_positions()
+if False: #CLOSES ALL POSITIONS REGARDLESS OF GAIN OR LOSS
+    trading_client.close_all_positions(cancel_orders=True)
 #print(assets)
 
 
